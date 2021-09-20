@@ -14,3 +14,7 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.OT_video-poster {
+  position: initial !important;
+}

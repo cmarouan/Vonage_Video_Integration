@@ -10,15 +10,8 @@
     "format": "prettier --write ./helpers/. ./pages/. ./components/."
   },
   "dependencies": {
-    "@chakra-ui/icons": "^1.0.15",
-    "@chakra-ui/react": "^1.6.7",
-    "@emotion/react": "^11.4.1",
-    "@emotion/styled": "^11.3.0",
     "@opentok/client": "^2.20.3",
-    "axios": "^0.21.4",
-    "framer-motion": "^4.1.17",
     "next": "11.1.2",
-    "opentok": "^2.12.1",
     "prettier": "^2.4.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",

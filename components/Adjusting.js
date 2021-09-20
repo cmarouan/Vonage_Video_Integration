@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Select, Button, IconButton } from '@chakra-ui/react';
-import { Stack } from '@chakra-ui/layout';
 import styled from 'styled-components';
 import { FiVideo, FiVideoOff } from 'react-icons/fi';
 import { BsFillMicFill, BsFillMicMuteFill } from 'react-icons/bs';
 import { AiFillSound } from 'react-icons/ai';
+import { MdCallEnd } from 'react-icons/md';
 import { getAvailableDevices } from '../helpers/getDevices';
+import { SimpleButton, IconButton, CircleButton } from './commonComponents/Buttons';
+import { DropDown } from './commonComponents/DropDowns';
+import Spinner from './commonComponents/Spinner';
 
 const AdjustingContainer = styled.div`
     display: flex;
@@ -19,6 +21,7 @@ const AdjustingContainer = styled.div`
 
 const ButtonsContainer = styled.div`
     margin: 0.5rem;
+    display: flex;
 `;
 
 const ListsContainer = styled.div`
@@ -40,6 +43,7 @@ export default function Adjusting({
     disconnect,
     connection,
     publisher,
+    loading
 }) {
     const [devices, setDevices] = useState({});
 
@@ -56,107 +60,57 @@ export default function Adjusting({
     if (!devices?.audioInputDevices) return null;
     return (
         <AdjustingContainer>
-            <ButtonsContainer>
-                <Stack direction="row" spacing={4}>
-                    <IconButton
-                        aria-label="Video"
-                        icon={videoStatus ? <FiVideo /> : <FiVideoOff />}
-                        background="linear-gradient(#e53e3e, #ff005e)"
-                        size="lg"
-                        color="white"
-                        onClick={() => handleVideo(!videoStatus)}
-                    />
-                    <IconButton
-                        aria-label="Mic"
-                        icon={
-                            audioStatus ? (
-                                <BsFillMicFill />
-                            ) : (
-                                <BsFillMicMuteFill />
-                            )
-                        }
-                        background="linear-gradient(#e53e3e, #ff005e)"
-                        size="lg"
-                        color="white"
-                        onClick={() => handleAudio(!audioStatus)}
-                    />
-                </Stack>
-            </ButtonsContainer>
-            <ListsContainer>
+            {!connection  && <ButtonsContainer>
+                <IconButton
+                    icon={videoStatus ? <FiVideo /> : <FiVideoOff />}
+                    onClick={() => handleVideo(!videoStatus)}
+                />
+                <IconButton
+                    icon={
+                        audioStatus ? (
+                            <BsFillMicFill />
+                        ) : (
+                            <BsFillMicMuteFill />
+                        )
+                    }
+                    onClick={() => handleAudio(!audioStatus)}
+                />
+            </ButtonsContainer>}
+            {!connection && <ListsContainer>
                 <Item>
-                    <Select
-                        size="lg"
+                    <DropDown 
                         icon={<FiVideo />}
                         onChange={(e) =>
                             publisher.setVideoSource(e.target.value)
                         }
-                    >
-                        {devices?.videoDevices?.map(({ label, deviceId }) => (
-                            <option key={deviceId} value={deviceId}>
-                                {label}
-                            </option>
-                        ))}
-                    </Select>
+                        options={devices?.videoDevices}
+                    />
                 </Item>
                 <Item>
-                    <Select
-                        size="lg"
+                    <DropDown 
                         icon={<BsFillMicFill />}
                         onChange={(e) =>
                             publisher.setAudioSource(e.target.value)
                         }
-                    >
-                        {devices?.audioInputDevices?.map(
-                            ({ label, deviceId }) => (
-                                <option key={deviceId} value={deviceId}>
-                                    {label}
-                                </option>
-                            )
-                        )}
-                    </Select>
+                        options={devices?.audioInputDevices}
+                    />
                 </Item>
                 <Item>
-                    <Select
-                        size="lg"
+                    <DropDown 
                         icon={<AiFillSound />}
                         onChange={(e) =>
                             publisher.setAudioSource(e.target.value)
                         }
-                    >
-                        {devices?.audioOutputDevices?.map(
-                            ({ label, deviceId }) => (
-                                <option key={deviceId} value={deviceId}>
-                                    {label}
-                                </option>
-                            )
-                        )}
-                    </Select>
+                        options={devices?.audioOutputDevices}
+                    />
                 </Item>
-                <Item>
-                    {!connection ? (
-                        <Button
-                            background="linear-gradient(#e53e3e, #ff005e)"
-                            colorScheme="pink"
-                            variant="solid"
-                            size="lg"
-                            width="100%"
-                            onClick={() => goLive()}
-                        >
-                            Go live
-                        </Button>
-                    ) : (
-                        <Button
-                            background="linear-gradient(#e53e3e, #ff005e)"
-                            variant="solid"
-                            size="lg"
-                            width="100%"
-                            onClick={() => disconnect()}
-                        >
-                            End live
-                        </Button>
-                    )}
+                <Item style={{ textAlign: 'center' }}>
+                    <SimpleButton value={loading ? <Spinner /> : 'Go live'} onClick={() => goLive()} />
                 </Item>
-            </ListsContainer>
+            </ListsContainer>}
+            {connection && <Item style={{ textAlign: 'center', marginTop: '25vh' }}>
+                    <CircleButton onClick={() => disconnect()} icon={<MdCallEnd />} />
+            </Item>}
         </AdjustingContainer>
     );
 }

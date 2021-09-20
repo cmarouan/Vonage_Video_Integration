@@ -10,12 +10,7 @@ const Container = styled.div`
     right: 0;
     bottom: 0;
     left: 0;
-    height: 100vh;
-
-    @media (min-width: 1300px) {
-        width: 60%;
-        margin: 0;
-    }
+    height: 95vh;
 `;
 
 export default function Home() {

@@ -14,7 +14,7 @@ const Video = styled.div`
 `;
 
 const Publisher = styled.div`
-    height: 60%;
+    height: 100%;
     border-radius: 10px;
 `;
 
@@ -30,6 +30,7 @@ export default function Vonage() {
     const [publisher, setPublisher] = useState({});
     const [audio, setAudio] = useState(true);
     const [video, setVideo] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [connection, setConnection] = useState(false);
     const { publicRuntimeConfig: { API_KEY, SESSION_ID, TOKEN } = {} } =
         getConfig();
@@ -55,6 +56,7 @@ export default function Vonage() {
             width: '100%',
             height: '100%',
             fitMode: 'cover',
+            style: {buttonDisplayMode: 'off'}
         };
 
         return OT.initPublisher('publisher', options, handleError);
@@ -72,6 +74,7 @@ export default function Vonage() {
 
     const goLive = () => {
         try {
+            setLoading(true);
             session.on('streamCreated', function streamCreated(event) {
                 const subscriberOptions = {
                     insertMode: 'append',
@@ -107,6 +110,8 @@ export default function Vonage() {
             });
         } catch (error) {
             handleError(error);
+        } finally {
+            setLoading(true)
         }
     };
 
@@ -137,6 +142,7 @@ export default function Vonage() {
                 goLive={goLive}
                 disconnect={disconnect}
                 connection={connection}
+                loading={loading}
             />
         </>
     );

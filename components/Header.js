@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { Badge } from '@chakra-ui/layout';
 import { WiDirectionLeft } from 'react-icons/wi';
+import { Badge } from '../components/commonComponents/Badge';
 
 const HeaderContainer = styled.div`
     position: absolute;
@@ -65,13 +65,9 @@ export default function Header() {
             </HeaderTopContainer>
             <HeaderTime>
                 <Badge
-                    variant="solid"
-                    background="linear-gradient(#e53e3e, #ff005e)"
-                    size="md"
+                    value={`${date.getHours()}:${date.getMinutes()}`}
                     style={{ padding: '.5rem' }}
-                >
-                    {`${date.getHours()}:${date.getMinutes()}`}
-                </Badge>
+                />
             </HeaderTime>
             <Description>
                 This video call developed with NextJs/Vonage API
