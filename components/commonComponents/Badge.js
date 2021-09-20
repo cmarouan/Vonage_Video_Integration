@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const BadgeSmall = styled.small`
     display: inline-block;
@@ -15,11 +15,6 @@ const BadgeSmall = styled.small`
     text-align: center;
 `;
 
-
-export const Badge = ({
-    value
-}) => {
-    return (
-        <BadgeSmall> {value} </BadgeSmall>
-    )
-}
+export const Badge = ({ value }) => {
+    return <BadgeSmall> {value} </BadgeSmall>;
+};

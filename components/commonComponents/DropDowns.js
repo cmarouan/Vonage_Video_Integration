@@ -1,6 +1,5 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 import { AiOutlineRight } from 'react-icons/ai';
-
 
 const SelectContainer = styled.div`
     width: 100%;
@@ -83,22 +82,20 @@ const Select = styled.select`
     padding: 0 83px 0 45px;
 `;
 
-export const DropDown = ({
-    onChange,
-    options,
-    icon
-}) => {
+export const DropDown = ({ onChange, options, icon }) => {
     return (
         <SelectContainer onChange={onChange}>
-            <Icon>{ icon }</Icon>
+            <Icon>{icon}</Icon>
             <Select>
                 {options?.map(({ label, deviceId }) => (
                     <option key={deviceId} value={deviceId}>
-                        {label} 
+                        {label}
                     </option>
                 ))}
             </Select>
-            <IconRight><AiOutlineRight /></IconRight>
+            <IconRight>
+                <AiOutlineRight />
+            </IconRight>
         </SelectContainer>
-    )
-}
+    );
+};
