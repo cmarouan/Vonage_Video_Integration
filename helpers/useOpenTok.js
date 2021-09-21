@@ -1,11 +1,9 @@
 import OT from '@opentok/client';
+import getConfig from 'next/config';
+
+const { publicRuntimeConfig: { API_KEY } = {} } = getConfig();
 
 let session = {};
-
-export const initSession = (API_KEY, SESSION_ID) => {
-    session = OT.initSession(API_KEY, SESSION_ID);
-    return session;
-};
 
 const handleError = (error) => {
     if (error) {
@@ -28,10 +26,11 @@ export const initPublisher = () => {
 export const disconnectSession = () => session.disconnect();
 
 export const connectToSession = (
-    TOKEN,
+    TOKEN, SESSION_ID,
     { publisher, callbackDisconnect, callbackConnect }
 ) => {
     try {
+        session = OT.initSession(API_KEY, SESSION_ID);
         session.on('streamCreated', function streamCreated(event) {
             const subscriberOptions = {
                 insertMode: 'append',

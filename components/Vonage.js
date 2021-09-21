@@ -5,7 +5,6 @@ import Header from './Header';
 import getConfig from 'next/config';
 import { useRouter } from 'next/router';
 import {
-    initSession,
     initPublisher,
     connectToSession,
     disconnectSession,
@@ -37,8 +36,7 @@ export default function Vonage() {
     const [video, setVideo] = useState(true);
     const [loading, setLoading] = useState(false);
     const [connection, setConnection] = useState(false);
-    const { publicRuntimeConfig: { API_KEY, SESSION_ID, TOKEN } = {} } =
-        getConfig();
+    const { publicRuntimeConfig: { SESSION_ID, TOKEN } = {} } = getConfig();
     const router = useRouter();
 
     const handleError = (error) => {
@@ -57,10 +55,10 @@ export default function Vonage() {
         setVideo(status);
     };
 
-    const goLive = () => {
+    const goLive = (SESSION_ID, TOKEN) => {
         try {
             setLoading(true);
-            connectToSession(TOKEN, {
+            connectToSession(TOKEN, SESSION_ID, {
                 callbackDisconnect: disconnect,
                 callbackConnect: setConnection,
                 publisher,
@@ -79,7 +77,6 @@ export default function Vonage() {
     };
 
     useEffect(() => {
-        initSession(API_KEY, SESSION_ID);
         const published = initPublisher();
         setPublisher(published);
     }, []);
@@ -97,7 +94,7 @@ export default function Vonage() {
                 handleAudio={handleAudio}
                 handleVideo={handleVideo}
                 publisher={publisher}
-                goLive={goLive}
+                goLive={() => goLive(SESSION_ID, TOKEN)}
                 disconnect={disconnect}
                 connection={connection}
                 loading={loading}
