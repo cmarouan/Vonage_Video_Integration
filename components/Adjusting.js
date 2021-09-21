@@ -48,6 +48,7 @@ export default function Adjusting({
     connection,
     publisher,
     loading,
+    setOutputDevice,
 }) {
     const [devices, setDevices] = useState({});
 
@@ -105,9 +106,7 @@ export default function Adjusting({
                     <Item>
                         <DropDown
                             icon={<AiFillSound />}
-                            onChange={(e) =>
-                                publisher.setAudioSource(e.target.value)
-                            }
+                            onChange={(e) => setOutputDevice(e.target.value)}
                             options={devices?.audioOutputDevices}
                         />
                     </Item>

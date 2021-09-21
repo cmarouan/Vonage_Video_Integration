@@ -35,6 +35,7 @@ export default function Vonage() {
     const [audio, setAudio] = useState(true);
     const [video, setVideo] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [outputDevice, setOutputDevice] = useState('');
     const [connection, setConnection] = useState(false);
     const { publicRuntimeConfig: { SESSION_ID, TOKEN } = {} } = getConfig();
     const router = useRouter();
@@ -62,6 +63,7 @@ export default function Vonage() {
                 callbackDisconnect: disconnect,
                 callbackConnect: setConnection,
                 publisher,
+                outputDevice,
             });
         } catch (error) {
             handleError(error);
@@ -98,6 +100,7 @@ export default function Vonage() {
                 disconnect={disconnect}
                 connection={connection}
                 loading={loading}
+                setOutputDevice={setOutputDevice}
             />
         </>
     );

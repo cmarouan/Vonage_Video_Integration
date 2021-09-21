@@ -26,23 +26,49 @@ export const initPublisher = () => {
 export const disconnectSession = () => session.disconnect();
 
 export const connectToSession = (
-    TOKEN, SESSION_ID,
-    { publisher, callbackDisconnect, callbackConnect }
+    TOKEN,
+    SESSION_ID,
+    { publisher, callbackDisconnect, callbackConnect, outputDevice }
 ) => {
     try {
         session = OT.initSession(API_KEY, SESSION_ID);
+
         session.on('streamCreated', function streamCreated(event) {
             const subscriberOptions = {
                 insertMode: 'append',
                 width: '100%',
                 height: '100%',
             };
-            session.subscribe(
+            const subscriber = session.subscribe(
                 event.stream,
                 'subscriber',
                 subscriberOptions,
                 handleError
             );
+            subscriber.on('videoElementCreated', (event) => {
+                if (
+                    typeof event.element.sinkId !== 'undefined' &&
+                    outputDevice
+                ) {
+                    event.element
+                        .setSinkId(outputDevice)
+                        .then(() => {
+                            console.log(
+                                'successfully set the audio output device'
+                            );
+                        })
+                        .catch((err) => {
+                            console.error(
+                                'Failed to set the audio output device ',
+                                err
+                            );
+                        });
+                } else {
+                    console.warn(
+                        'device does not support setting the audio output'
+                    );
+                }
+            });
         });
 
         session.on('sessionDisconnected', function sessionDisconnected(event) {
