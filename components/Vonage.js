@@ -56,26 +56,31 @@ export default function Vonage() {
         setVideo(status);
     };
 
-    const goLive = (SESSION_ID, TOKEN) => {
+    const goLive = async (SESSION_ID, TOKEN) => {
         try {
             setLoading(true);
-            connectToSession(TOKEN, SESSION_ID, {
+            await connectToSession(TOKEN, SESSION_ID, {
                 callbackDisconnect: disconnect,
-                callbackConnect: setConnection,
+                callbackConnect: () => {
+                    setConnection(true);
+                    setLoading(false);
+                },
                 publisher,
                 outputDevice,
             });
         } catch (error) {
             handleError(error);
-        } finally {
-            setLoading(true);
         }
     };
 
-    const disconnect = () => {
-        disconnectSession();
-        setConnection(false);
-        router.reload(window.location.pathname);
+    const disconnect = async () => {
+        try {
+            await disconnectSession();
+            setConnection(false);
+            router.reload(window.location.pathname);
+        } catch  (error) {
+            handleError(error);
+        }
     };
 
     useEffect(() => {

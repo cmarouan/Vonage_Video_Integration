@@ -8,7 +8,7 @@ import { getAvailableDevices } from '../helpers/getDevices';
 import {
     SimpleButton,
     IconButton,
-    CircleButton,
+    CircleButton
 } from './commonComponents/Buttons';
 import { DropDown } from './commonComponents/DropDowns';
 import Spinner from './commonComponents/Spinner';
@@ -20,7 +20,7 @@ const AdjustingContainer = styled.div`
     bottom: 0;
     width: 42vh;
     margin: 1rem;
-    height: 34vh;
+    width: 91%;
 `;
 
 const ButtonsContainer = styled.div`

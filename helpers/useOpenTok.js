@@ -9,6 +9,7 @@ const handleError = (error) => {
     if (error) {
         console.error(error);
     }
+    return error;
 };
 
 export const initPublisher = () => {
@@ -23,9 +24,9 @@ export const initPublisher = () => {
     return OT.initPublisher('publisher', options, handleError);
 };
 
-export const disconnectSession = () => session.disconnect();
+export const disconnectSession = async () => session.disconnect();
 
-export const connectToSession = (
+export const connectToSession = async (
     TOKEN,
     SESSION_ID,
     { publisher, callbackDisconnect, callbackConnect, outputDevice }
@@ -78,17 +79,18 @@ export const connectToSession = (
             console.log('You were disconnected from the swssion', event.reason);
         });
 
-        session.connect(TOKEN, function callback(error) {
+        return session.connect(TOKEN, function callback(error) {
             if (error) {
                 handleError(error);
             } else {
                 session.publish(publisher, handleError);
                 if (typeof callbackConnect === 'function') {
-                    callbackConnect(true);
+                    callbackConnect();
                 }
             }
         });
+        
     } catch (error) {
-        handleError(error);
+        return handleError(error);
     }
 };
