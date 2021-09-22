@@ -51,8 +51,8 @@ const ButtonCircle = styled.button`
     font-size: 27px;
 `;
 
-export const SimpleButton = ({ onClick, value }) => {
-    return <Button onClick={onClick}> {value} </Button>;
+export const SimpleButton = ({ onClick, value, disabled }) => {
+    return <Button onClick={onClick} disabled={disabled}> {value} </Button>;
 };
 
 export const IconButton = ({ onClick, icon }) => {
@@ -63,6 +63,6 @@ export const SmallButton = ({ onClick, icon }) => {
     return <ButtonSmall onClick={onClick}> {icon} </ButtonSmall>;
 };
 
-export const CircleButton = ({ onClick, icon }) => {
-    return <ButtonCircle onClick={onClick}> {icon} </ButtonCircle>;
+export const CircleButton = ({ onClick, icon, disabled }) => {
+    return <ButtonCircle disabled={disabled} onClick={onClick}> {icon} </ButtonCircle>;
 };

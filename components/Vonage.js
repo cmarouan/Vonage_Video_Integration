@@ -58,6 +58,7 @@ export default function Vonage() {
 
     const goLive = async (SESSION_ID, TOKEN) => {
         try {
+            console.log('go live clicked');
             setLoading(true);
             await connectToSession(TOKEN, SESSION_ID, {
                 callbackDisconnect: disconnect,

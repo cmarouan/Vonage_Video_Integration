@@ -83,6 +83,7 @@ export const connectToSession = async (
             if (error) {
                 handleError(error);
             } else {
+                console.log('connected');
                 session.publish(publisher, handleError);
                 if (typeof callbackConnect === 'function') {
                     callbackConnect();

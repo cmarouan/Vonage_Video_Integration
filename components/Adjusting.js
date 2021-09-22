@@ -112,6 +112,7 @@ export default function Adjusting({
                     </Item>
                     <Item style={{ textAlign: 'center' }}>
                         <SimpleButton
+                            disabled={loading}
                             value={loading ? <Spinner /> : 'Go live'}
                             onClick={() => goLive()}
                         />
@@ -121,6 +122,7 @@ export default function Adjusting({
             {connection && (
                 <Item style={{ textAlign: 'center', marginTop: '25vh' }}>
                     <CircleButton
+                        disabled={!connection}
                         onClick={() => disconnect()}
                         icon={<MdCallEnd />}
                     />
