@@ -56,8 +56,9 @@ export default function Vonage() {
         setVideo(status);
     };
 
-    const goLive = async (SESSION_ID, TOKEN) => {
+    const goLive = async (e, SESSION_ID, TOKEN) => {
         try {
+            e.preventDefault();
             console.log('go live clicked');
             setLoading(true);
             await connectToSession(TOKEN, SESSION_ID, {
@@ -74,8 +75,9 @@ export default function Vonage() {
         }
     };
 
-    const disconnect = async () => {
+    const disconnect = async (e) => {
         try {
+            e.preventDefault();
             await disconnectSession();
             setConnection(false);
             router.reload(window.location.pathname);
@@ -102,8 +104,8 @@ export default function Vonage() {
                 handleAudio={handleAudio}
                 handleVideo={handleVideo}
                 publisher={publisher}
-                goLive={() => goLive(SESSION_ID, TOKEN)}
-                disconnect={disconnect}
+                goLive={(e) => goLive(e, SESSION_ID, TOKEN)}
+                disconnect={(e) => disconnect(e)}
                 connection={connection}
                 loading={loading}
                 setOutputDevice={setOutputDevice}
