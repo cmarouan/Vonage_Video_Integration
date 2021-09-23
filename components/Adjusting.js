@@ -8,7 +8,7 @@ import { getAvailableDevices } from '../helpers/getDevices';
 import {
     SimpleButton,
     IconButton,
-    CircleButton
+    CircleButton,
 } from './commonComponents/Buttons';
 import { DropDown } from './commonComponents/DropDowns';
 import Spinner from './commonComponents/Spinner';
@@ -53,81 +53,102 @@ export default function Adjusting({
     const [devices, setDevices] = useState({});
 
     const getDevices = async () => {
-        const res = await navigator.mediaDevices.enumerateDevices();
-        const formatedDevices = getAvailableDevices(res);
-        setDevices(formatedDevices);
+        navigator.getUserMedia(
+            {
+                video: true,
+                audio: true,
+            },
+            async () => {
+                const res = await navigator.mediaDevices.enumerateDevices();
+                const formatedDevices = getAvailableDevices(res);
+                setDevices(formatedDevices);
+            },
+            (err) => {
+                if (err === PERMISSION_DENIED) {
+                    setDevices({});
+                }
+            }
+        );
     };
 
     useEffect(() => {
         getDevices();
     }, []);
 
-    if (!devices?.audioInputDevices) return null;
-    return (
-        <AdjustingContainer>
-            {!connection && (
-                <ButtonsContainer>
-                    <IconButton
-                        icon={videoStatus ? <FiVideo /> : <FiVideoOff />}
-                        onClick={() => handleVideo(!videoStatus)}
-                    />
-                    <IconButton
-                        icon={
-                            audioStatus ? (
-                                <BsFillMicFill />
-                            ) : (
-                                <BsFillMicMuteFill />
-                            )
-                        }
-                        onClick={() => handleAudio(!audioStatus)}
-                    />
-                </ButtonsContainer>
-            )}
-            {!connection && (
-                <ListsContainer>
-                    <Item>
-                        <DropDown
-                            icon={<FiVideo />}
-                            onChange={(e) =>
-                                publisher.setVideoSource(e.target.value)
+    if (
+        devices?.videoDevices?.length > 0 ||
+        devices?.audioInputDevices?.length > 0
+    ) {
+        return (
+            <AdjustingContainer>
+                {!connection && (
+                    <ButtonsContainer>
+                        <IconButton
+                            icon={videoStatus ? <FiVideo /> : <FiVideoOff />}
+                            onClick={() => handleVideo(!videoStatus)}
+                        />
+                        <IconButton
+                            icon={
+                                audioStatus ? (
+                                    <BsFillMicFill />
+                                ) : (
+                                    <BsFillMicMuteFill />
+                                )
                             }
-                            options={devices?.videoDevices}
+                            onClick={() => handleAudio(!audioStatus)}
+                        />
+                    </ButtonsContainer>
+                )}
+                {!connection && (
+                    <ListsContainer>
+                        <Item>
+                            <DropDown
+                                icon={<FiVideo />}
+                                onChange={(e) =>
+                                    publisher.setVideoSource(e.target.value)
+                                }
+                                options={devices?.videoDevices}
+                            />
+                        </Item>
+                        <Item>
+                            <DropDown
+                                icon={<BsMic />}
+                                onChange={(e) =>
+                                    publisher.setAudioSource(e.target.value)
+                                }
+                                options={devices?.audioInputDevices}
+                            />
+                        </Item>
+                        <Item>
+                            <DropDown
+                                icon={<AiFillSound />}
+                                onChange={(e) =>
+                                    setOutputDevice(e.target.value)
+                                }
+                                options={devices?.audioOutputDevices}
+                            />
+                        </Item>
+                        <Item style={{ textAlign: 'center' }}>
+                            <SimpleButton
+                                disabled={loading}
+                                value={loading ? <Spinner /> : 'Go live'}
+                                onClick={(e) => goLive(e)}
+                            />
+                        </Item>
+                    </ListsContainer>
+                )}
+                {connection && (
+                    <Item style={{ textAlign: 'center', marginTop: '25vh' }}>
+                        <CircleButton
+                            disabled={!connection}
+                            onClick={(e) => disconnect(e)}
+                            icon={<MdCallEnd />}
                         />
                     </Item>
-                    <Item>
-                        <DropDown
-                            icon={<BsMic />}
-                            onChange={(e) =>
-                                publisher.setAudioSource(e.target.value)
-                            }
-                            options={devices?.audioInputDevices}
-                        />
-                    </Item>
-                    <Item>
-                        <DropDown
-                            icon={<AiFillSound />}
-                            onChange={(e) => setOutputDevice(e.target.value)}
-                            options={devices?.audioOutputDevices}
-                        />
-                    </Item>
-                    <Item style={{ textAlign: 'center' }}>
-                        <SimpleButton
-                            disabled={loading}
-                            value={loading ? <Spinner /> : 'Go live'}
-                            onClick={(e) => goLive(e)}
-                        />
-                    </Item>
-                </ListsContainer>
-            )}
-            {connection && (
-                <Item style={{ textAlign: 'center', marginTop: '25vh' }}>
-                    <CircleButton
-                        disabled={!connection}
-                        onClick={(e) => disconnect(e)}
-                        icon={<MdCallEnd />}
-                    />
-                </Item>
-            )}
-        </AdjustingContainer>
-    );
+                )}
+            </AdjustingContainer>
+        );
+    }
+
+    return null;
 }

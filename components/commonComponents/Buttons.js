@@ -52,7 +52,12 @@ const ButtonCircle = styled.button`
 `;
 
 export const SimpleButton = ({ onClick, value, disabled }) => {
-    return <Button onClick={onClick} disabled={disabled}> {value} </Button>;
+    return (
+        <Button onClick={onClick} disabled={disabled}>
+            {' '}
+            {value}{' '}
+        </Button>
+    );
 };
 
 export const IconButton = ({ onClick, icon }) => {
@@ -64,5 +69,10 @@ export const SmallButton = ({ onClick, icon }) => {
 };
 
 export const CircleButton = ({ onClick, icon, disabled }) => {
-    return <ButtonCircle disabled={disabled} onClick={onClick}> {icon} </ButtonCircle>;
+    return (
+        <ButtonCircle disabled={disabled} onClick={onClick}>
+            {' '}
+            {icon}{' '}
+        </ButtonCircle>
+    );
 };

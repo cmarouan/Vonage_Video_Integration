@@ -90,7 +90,6 @@ export const connectToSession = async (
                 }
             }
         });
-        
     } catch (error) {
         return handleError(error);
     }

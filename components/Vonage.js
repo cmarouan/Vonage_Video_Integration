@@ -78,10 +78,12 @@ export default function Vonage() {
     const disconnect = async (e) => {
         try {
             e.preventDefault();
-            await disconnectSession();
-            setConnection(false);
-            router.reload(window.location.pathname);
-        } catch  (error) {
+            if (confirm('Do you really want to end you live !')) {
+                await disconnectSession();
+                setConnection(false);
+                router.reload(window.location.pathname);
+            }
+        } catch (error) {
             handleError(error);
         }
     };
