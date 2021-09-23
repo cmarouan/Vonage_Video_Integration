@@ -9,6 +9,7 @@ import {
     connectToSession,
     disconnectSession,
 } from '../helpers/useOpenTok';
+import { getAvailableDevices } from '../helpers/getDevices';
 
 const Video = styled.div`
     height: 100vh;
@@ -37,6 +38,8 @@ export default function Vonage() {
     const [loading, setLoading] = useState(false);
     const [outputDevice, setOutputDevice] = useState('');
     const [connection, setConnection] = useState(false);
+    const [devices, setDevices] = useState({});
+    const [error, setError] = useState('');
     const { publicRuntimeConfig: { SESSION_ID, TOKEN } = {} } = getConfig();
     const router = useRouter();
 
@@ -88,9 +91,35 @@ export default function Vonage() {
         }
     };
 
+    const getDevicesAndInitPublisher = async () => {
+        setError('');
+        navigator.getUserMedia =
+            navigator.getUserMedia ||
+            navigator.webkitGetUserMedia ||
+            navigator.mozGetUserMedia;
+        navigator.getUserMedia(
+            {
+                video: true,
+                audio: true,
+            },
+            async () => {
+                const res = await navigator.mediaDevices.enumerateDevices();
+                const formatedDevices = getAvailableDevices(res);
+                const published = initPublisher();
+                setPublisher(published);
+                setDevices(formatedDevices);
+            },
+            (err) => {
+                setDevices({});
+                setError(
+                    `The following error occurred: ${err?.name} ! please check your permission`
+                );
+            }
+        );
+    };
+
     useEffect(() => {
-        const published = initPublisher();
-        setPublisher(published);
+        getDevicesAndInitPublisher();
     }, []);
 
     return (
@@ -111,6 +140,8 @@ export default function Vonage() {
                 connection={connection}
                 loading={loading}
                 setOutputDevice={setOutputDevice}
+                devices={devices}
+                error={error}
             />
         </>
     );

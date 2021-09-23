@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { FiVideo, FiVideoOff } from 'react-icons/fi';
 import { BsFillMicFill, BsFillMicMuteFill, BsMic } from 'react-icons/bs';
 import { AiFillSound } from 'react-icons/ai';
 import { MdCallEnd } from 'react-icons/md';
-import { getAvailableDevices } from '../helpers/getDevices';
+import { Error } from './commonComponents/Error';
+
 import {
     SimpleButton,
     IconButton,
@@ -49,32 +49,9 @@ export default function Adjusting({
     publisher,
     loading,
     setOutputDevice,
+    devices,
+    error,
 }) {
-    const [devices, setDevices] = useState({});
-
-    const getDevices = async () => {
-        navigator.getUserMedia(
-            {
-                video: true,
-                audio: true,
-            },
-            async () => {
-                const res = await navigator.mediaDevices.enumerateDevices();
-                const formatedDevices = getAvailableDevices(res);
-                setDevices(formatedDevices);
-            },
-            (err) => {
-                if (err === PERMISSION_DENIED) {
-                    setDevices({});
-                }
-            }
-        );
-    };
-
-    useEffect(() => {
-        getDevices();
-    }, []);
-
     if (
         devices?.videoDevices?.length > 0 ||
         devices?.audioInputDevices?.length > 0
@@ -149,6 +126,6 @@ export default function Adjusting({
             </AdjustingContainer>
         );
     }
-
+    if (error?.length) return <Error value={error} />;
     return null;
 }
