@@ -3,7 +3,7 @@ export const getAvailableDevices = (devices = []) => {
     const audioInputType = 'audioinput';
     const audiOutputType = 'audiooutput';
 
-    return {
+    const formatted = {
         videoDevices: devices?.filter(({ kind }) => kind === videoType),
         audioInputDevices: devices?.filter(
             ({ kind, deviceId }) =>
@@ -14,4 +14,14 @@ export const getAvailableDevices = (devices = []) => {
                 kind === audiOutputType && deviceId !== 'communications'
         ),
     };
+
+    if (!formatted?.audioOutputDevices?.length) {
+        formatted.audioOutputDevices = [{
+            deviceId: 'communications',
+            kind: audiOutputType,
+            label: 'Default'
+        }]
+    }
+
+    return formatted;
 };

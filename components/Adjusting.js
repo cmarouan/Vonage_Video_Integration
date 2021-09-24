@@ -4,7 +4,6 @@ import { BsFillMicFill, BsFillMicMuteFill, BsMic } from 'react-icons/bs';
 import { AiFillSound } from 'react-icons/ai';
 import { MdCallEnd } from 'react-icons/md';
 import { Error } from './commonComponents/Error';
-
 import {
     SimpleButton,
     IconButton,
@@ -12,7 +11,7 @@ import {
 } from './commonComponents/Buttons';
 import { DropDown } from './commonComponents/DropDowns';
 import Spinner from './commonComponents/Spinner';
-
+import { changeVideoSource } from '../helpers/useOpenTok';
 const AdjustingContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -50,7 +49,7 @@ export default function Adjusting({
     loading,
     setOutputDevice,
     devices,
-    error,
+    error
 }) {
     if (
         devices?.videoDevices?.length > 0 ||
@@ -82,7 +81,7 @@ export default function Adjusting({
                             <DropDown
                                 icon={<FiVideo />}
                                 onChange={(e) =>
-                                    publisher.setVideoSource(e.target.value)
+                                    changeVideoSource(e.target.value)
                                 }
                                 options={devices?.videoDevices}
                             />

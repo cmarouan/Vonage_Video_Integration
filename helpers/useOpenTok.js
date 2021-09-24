@@ -94,3 +94,32 @@ export const connectToSession = async (
         return handleError(error);
     }
 };
+
+export const changeVideoSource = async (deviceId) => {
+    try {
+        const currentVideo = document.querySelector('video');
+        const videoConstraints = {};
+        
+        if (deviceId === '') {
+            videoConstraints.facingMode = 'environment';
+        } else {
+            videoConstraints.deviceId = { exact: deviceId };
+        }
+    
+        const constraints = {
+            video: videoConstraints,
+            audio: true
+        };
+        
+        currentVideo?.srcObject?.getTracks()?.forEach(track => {
+            track.stop();
+            track.enabled = false;
+        });
+
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        currentVideo.srcObject = stream;
+        
+    } catch (error) {
+        console.log(error?.message + error.name);
+    }
+};

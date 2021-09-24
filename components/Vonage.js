@@ -91,35 +91,29 @@ export default function Vonage() {
         }
     };
 
-    const getDevicesAndInitPublisher = async () => {
+    const initDevicesAndInitPublisher = () => {
         setError('');
-        navigator.getUserMedia =
-            navigator.getUserMedia ||
-            navigator.webkitGetUserMedia ||
-            navigator.mozGetUserMedia;
-        navigator.getUserMedia(
-            {
-                video: true,
-                audio: true,
-            },
-            async () => {
-                const res = await navigator.mediaDevices.enumerateDevices();
-                const formatedDevices = getAvailableDevices(res);
-                const published = initPublisher();
-                setPublisher(published);
-                setDevices(formatedDevices);
-            },
-            (err) => {
+        navigator.mediaDevices
+            .getUserMedia({ audio: true, video: true })
+            .then(() => getDevicesAndInitPublisher())
+            .catch((err) => {
                 setDevices({});
                 setError(
                     `The following error occurred: ${err?.name} ! please check your permission`
                 );
-            }
-        );
+            });
+    };
+
+    const getDevicesAndInitPublisher = async () => {
+        const res = await navigator.mediaDevices.enumerateDevices();
+        const formattedDevices = getAvailableDevices(res);
+        const published = initPublisher();
+        setPublisher(published);
+        setDevices(formattedDevices);
     };
 
     useEffect(() => {
-        getDevicesAndInitPublisher();
+        initDevicesAndInitPublisher();
     }, []);
 
     return (
