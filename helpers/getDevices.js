@@ -16,11 +16,13 @@ export const getAvailableDevices = (devices = []) => {
     };
 
     if (!formatted?.audioOutputDevices?.length) {
-        formatted.audioOutputDevices = [{
-            deviceId: 'communications',
-            kind: audiOutputType,
-            label: 'Default'
-        }]
+        formatted.audioOutputDevices = [
+            {
+                deviceId: 'communications',
+                kind: audiOutputType,
+                label: 'Default',
+            },
+        ];
     }
 
     return formatted;

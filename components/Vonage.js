@@ -91,11 +91,16 @@ export default function Vonage() {
         }
     };
 
-    const initDevicesAndInitPublisher = () => {
+    const initDevicesAndInitPublisher = (
+        rules = { audio: true, video: true }
+    ) => {
         setError('');
         navigator.mediaDevices
-            .getUserMedia({ audio: true, video: true })
-            .then(() => getDevicesAndInitPublisher())
+            .getUserMedia(rules)
+            .then((stream) => {
+                stream.getTracks().forEach((track) => track.stop());
+                getDevicesAndInitPublisher();
+            })
             .catch((err) => {
                 setDevices({});
                 setError(

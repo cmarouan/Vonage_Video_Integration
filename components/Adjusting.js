@@ -12,6 +12,7 @@ import {
 import { DropDown } from './commonComponents/DropDowns';
 import Spinner from './commonComponents/Spinner';
 import { changeVideoSource } from '../helpers/useOpenTok';
+
 const AdjustingContainer = styled.div`
     display: flex;
     flex-direction: column;
@@ -49,7 +50,7 @@ export default function Adjusting({
     loading,
     setOutputDevice,
     devices,
-    error
+    error,
 }) {
     if (
         devices?.videoDevices?.length > 0 ||
@@ -81,7 +82,7 @@ export default function Adjusting({
                             <DropDown
                                 icon={<FiVideo />}
                                 onChange={(e) =>
-                                    changeVideoSource(e.target.value)
+                                    changeVideoSource(e.target.value, publisher)
                                 }
                                 options={devices?.videoDevices}
                             />

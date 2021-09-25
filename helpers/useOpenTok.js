@@ -18,6 +18,7 @@ export const initPublisher = () => {
         width: '100%',
         height: '100%',
         fitMode: 'cover',
+        mirror: false,
         style: { buttonDisplayMode: 'off' },
     };
 
@@ -95,30 +96,9 @@ export const connectToSession = async (
     }
 };
 
-export const changeVideoSource = async (deviceId) => {
+export const changeVideoSource = async (deviceId, publisher) => {
     try {
-        const currentVideo = document.querySelector('video');
-        const videoConstraints = {};
-        
-        if (deviceId === '') {
-            videoConstraints.facingMode = 'environment';
-        } else {
-            videoConstraints.deviceId = { exact: deviceId };
-        }
-    
-        const constraints = {
-            video: videoConstraints,
-            audio: true
-        };
-        
-        currentVideo?.srcObject?.getTracks()?.forEach(track => {
-            track.stop();
-            track.enabled = false;
-        });
-
-        const stream = await navigator.mediaDevices.getUserMedia(constraints);
-        currentVideo.srcObject = stream;
-        
+        await publisher.setVideoSource(deviceId);
     } catch (error) {
         console.log(error?.message + error.name);
     }
